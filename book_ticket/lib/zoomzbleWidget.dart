@@ -1,12 +1,17 @@
+import 'package:book_ticket/selectNumberOfSeat.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:zoom_widget/zoom_widget.dart';
+
 
 class ZoomableList extends StatefulWidget {
   final int row;
   final int clm;
+  final int? seatCount;
+  List<Seat>? occupiedSeat;
 
-  ZoomableList({required this.row, required this.clm});
+  ZoomableList({required this.row, required this.clm,this.occupiedSeat,this.seatCount});
 
   @override
   _ZoomableListState createState() => _ZoomableListState();
@@ -15,6 +20,7 @@ class ZoomableList extends StatefulWidget {
 class _ZoomableListState extends State<ZoomableList> {
   final List<String> alphabet = List.generate(26, (index) => String.fromCharCode('A'.codeUnitAt(0) + index));
   List<Seat> ticketStatus = [];
+  List<Seat> occupiedSeats = [];
   List<Seat> selectedSeats = [];
   int row = 0;
   int clm = 30;
@@ -31,6 +37,13 @@ class _ZoomableListState extends State<ZoomableList> {
       for (int j = 0; j < clm; j++) {
         ticketStatus.add(Seat(state: SeatState.available, seatID: '${alphabet[i]} ${j + 1}'));
       }
+    }
+    if(widget.occupiedSeat!=null){
+      for(int i=0;i<widget.occupiedSeat!.length;i++){
+        int j=ticketStatus.indexWhere((e)=>e.seatID==widget.occupiedSeat![i].seatID);
+        ticketStatus[j]=Seat(seatID: widget.occupiedSeat![i].seatID,state: widget.occupiedSeat![i].state);
+      }
+
     }
     totalSeat = ticketStatus.length;
   }
@@ -70,14 +83,38 @@ class _ZoomableListState extends State<ZoomableList> {
                                 padding: EdgeInsets.only(top: 8, bottom: 8, right: clm / 2 == index2 ? 20 : 8, left: 8),
                                 child: GestureDetector(
                                   onTap: () {
-                                    setState(() {
-                                      if (state == SeatState.available && id == '${alphabet[index]} ${index2 + 1}') {
-                                        ticketStatus[i] = Seat(state: SeatState.selected, seatID: '${alphabet[index]} ${index2 + 1}');
 
-                                      } else if (state == SeatState.selected && id == '${alphabet[index]} ${index2 + 1}') {
-                                        ticketStatus[i] = Seat(state: SeatState.available, seatID: '${alphabet[index]} ${index2 + 1}');
+                                    setState(() {
+                                      if(widget.occupiedSeat!=null){
+                                        if (state == SeatState.available && id == '${alphabet[index]} ${index2 + 1}') {
+                                          if(selectedSeats.length<widget.seatCount!){
+                                            ticketStatus[i] = Seat(state: SeatState.selected, seatID: '${alphabet[index]} ${index2 + 1}');
+                                            selectedSeats.add(ticketStatus[i]);
+                                          }
+                                          else{
+                                            Fluttertoast.showToast(msg: "All ${widget.seatCount} is selected");
+                                          }
+                                        }
+                                        else if (state == SeatState.selected && id == '${alphabet[index]} ${index2 + 1}') {
+                                          ticketStatus[i] = Seat(state: SeatState.available, seatID: '${alphabet[index]} ${index2 + 1}');
+
+                                          selectedSeats.removeWhere((e) {
+                                            return e.seatID=='${alphabet[index]} ${index2 + 1}';
+                                          });
+                                          print(selectedSeats.length);
+                                        }
+                                      }
+                                      else{
+                                        if (state == SeatState.available && id == '${alphabet[index]} ${index2 + 1}') {
+                                          ticketStatus[i] = Seat(state: SeatState.occupied, seatID: '${alphabet[index]} ${index2 + 1}');
+
+                                        }
+                                        else if (state == SeatState.selected && id == '${alphabet[index]} ${index2 + 1}') {
+                                          ticketStatus[i] = Seat(state: SeatState.available, seatID: '${alphabet[index]} ${index2 + 1}');
+                                        }
                                       }
                                     });
+
                                   },
                                   child: Container(
                                     height: 40,
@@ -113,10 +150,12 @@ class _ZoomableListState extends State<ZoomableList> {
           Align(alignment: Alignment.bottomCenter,
             child: ElevatedButton(onPressed: (){
               ticketStatus.forEach((e){
-                if(e.state==SeatState.selected){
-                  selectedSeats.add(e);
-                }
+                if(e.state==SeatState.occupied){occupiedSeats.add(e);}
+                if(e.state==SeatState.selected){selectedSeats.add(e);}
               });
+              Navigator.push(context, MaterialPageRoute(builder: (context)=>selectNumberOfSeat(
+                  clm: widget.clm, row: widget.row,occupiedSeat: occupiedSeats,)));
+
             }, child: Text("Proceed")),
           )
         ],
