@@ -86,8 +86,7 @@ class _ZoomableListState extends State<ZoomableList> {
                                   if(widget.occupiedSeat!=null){
                                     if (state == SeatState.available && id == '${alphabet[index]} ${index2 + 1}') {
                                       if(selectedSeats.length<seatCount){
-                                        // ticketStatus[i] = Seat(state: SeatState.selected, seatID: '${alphabet[index]} ${index2 + 1}');
-                                        // selectedSeats.add(ticketStatus[i]);
+
                                         for(int a=0;a<seatCount&&selectedSeats.length<seatCount;a++){
                                           try{
                                             if(ticketStatus[i+a].state==SeatState.available){
