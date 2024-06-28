@@ -1,3 +1,4 @@
+import 'package:book_ticket/GetterSetters.dart';
 import 'package:book_ticket/zoomzbleWidget.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -78,6 +79,8 @@ class _InputScreenState extends State<InputScreen> {
                       if (_formKey.currentState!.validate()) {
                         _formKey.currentState!.save();
                         // Navigate to the next screen or perform any action
+                        GetterSetters.instances.setclm=columns;
+                        GetterSetters.instances.setrow=rows;
                         Navigator.push(
                           context,
                           MaterialPageRoute(

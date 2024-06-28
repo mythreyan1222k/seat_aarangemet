@@ -4,6 +4,8 @@ import 'package:flutter/rendering.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:zoom_widget/zoom_widget.dart';
 
+import 'GetterSetters.dart';
+
 
 class ZoomableList extends StatefulWidget {
   final int row;
@@ -29,8 +31,9 @@ class _ZoomableListState extends State<ZoomableList> {
   @override
   void initState() {
     super.initState();
-    row = widget.row;
-    clm = widget.clm;
+
+    row = GetterSetters.instances.setrow;
+    clm = GetterSetters.instances.setclm;
     // Initialize your ticketStatus list or any other initialization logic
     // Ensure ticketStatus is initialized properly
     for (int i = 0; i < row; i++) {
@@ -151,7 +154,6 @@ class _ZoomableListState extends State<ZoomableList> {
             child: ElevatedButton(onPressed: (){
               ticketStatus.forEach((e){
                 if(e.state==SeatState.occupied){occupiedSeats.add(e);}
-                if(e.state==SeatState.selected){selectedSeats.add(e);}
               });
               Navigator.push(context, MaterialPageRoute(builder: (context)=>selectNumberOfSeat(
                   clm: widget.clm, row: widget.row,occupiedSeat: occupiedSeats,)));

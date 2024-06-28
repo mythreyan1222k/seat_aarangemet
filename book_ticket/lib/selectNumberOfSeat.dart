@@ -1,3 +1,4 @@
+import 'package:book_ticket/GetterSetters.dart';
 import 'package:book_ticket/zoomzbleWidget.dart';
 import 'package:flutter/material.dart';
 
@@ -41,7 +42,7 @@ class _selectNumberOfSeatState extends State<selectNumberOfSeat> {
           ),
           ElevatedButton(
             onPressed: () {
-              print(seats);
+             GetterSetters.instances.setseatcount=seats!;
               Navigator.push(
               context,
               MaterialPageRoute(
