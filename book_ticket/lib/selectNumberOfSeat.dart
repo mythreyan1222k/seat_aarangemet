@@ -3,6 +3,7 @@ import 'package:book_ticket/markSelectedSeats.dart';
 import 'package:book_ticket/utils.dart';
 import 'package:book_ticket/seatArrangement.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 import 'InputScreen.dart';
 import 'MarkOccupiedSeats.dart';
@@ -131,10 +132,14 @@ class _selectNumberOfSeatState extends State<selectNumberOfSeat> {
                           if (value == null || value.isEmpty) {
                             return 'Please enter number of seats';
                           }
+                          int totalseat=GetterSetters.instances.seatStatus.length;
+                          int occpiedseat=GetterSetters.instances.occupiedSeat.length;
+                          int availableseats=totalseat-occpiedseat;
                           int? parsedValue = int.tryParse(value);
-                          if (parsedValue == null || parsedValue <= 0 || parsedValue > 26) {
-                            return 'Rows should be between 1 and 26';
+                          if (parsedValue == null || parsedValue <= 0 ) {
+                            return 'Enter no of tickets';
                           }
+                          if(availableseats<parsedValue){return '"Only $availableseats seats is available"';}
                           return null;
                         },
                         onSaved: (value) {
@@ -143,9 +148,11 @@ class _selectNumberOfSeatState extends State<selectNumberOfSeat> {
                       ),
                       SizedBox(height: 50.0),
                       SubmitButton(name: "Proceed",ontap: (){
+                        int totalseat=GetterSetters.instances.seatStatus.length;
+                        int occpiedseat=GetterSetters.instances.occupiedSeat.length;
+                        int availableseats=totalseat-occpiedseat;
                         if (_formKey.currentState!.validate()) {
                           _formKey.currentState!.save();
-                          // Navigate to the next screen or perform any action
                           GetterSetters.instances.setseatcount=seats!;
                           Navigator.push(
                             context,
@@ -153,6 +160,7 @@ class _selectNumberOfSeatState extends State<selectNumberOfSeat> {
                               builder: (context) => MarkSelectedSeats(),
                             ),
                           );
+
                         } else {
                           // Show validation errors
                           ScaffoldMessenger.of(context).showSnackBar(

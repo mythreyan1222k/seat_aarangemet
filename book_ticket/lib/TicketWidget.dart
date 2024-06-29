@@ -68,23 +68,29 @@ class _TicketWidgetState extends State<TicketWidget> {
               ),
 
 
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    'Seat no : ',
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 14,fontWeight: FontWeight.bold
-                    ),
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: SizedBox(
+                  width: 300,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        'Seat no : ',
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 14,fontWeight: FontWeight.bold
+                        ),
+                      ),
+                      Flexible(
+                        child: Wrap(
+                          children: selectedSeats.map((e)=>Text("${e.seatID.toString()},  ",
+                            style: TextStyle(fontWeight: FontWeight.bold),)).toList(),
+                        ),
+                      ),
+                    ],
                   ),
-                  Flexible(
-                    child: Wrap(
-                      children: selectedSeats.map((e)=>Text("${e.seatID.toString()},  ",
-                        style: TextStyle(fontWeight: FontWeight.bold),)).toList(),
-                    ),
-                  ),
-                ],
+                ),
               )
 
             ],

@@ -88,10 +88,10 @@ class _InputScreenState extends State<InputScreen> {
                           if (value == null || value.isEmpty) {
                             return 'Please enter number of rows';
                           }
-                          int? parsedValue = int.tryParse(value);
-                          if (parsedValue == null || parsedValue <= 0 || parsedValue > 26) {
-                            return 'Rows should be between 1 and 26';
-                          }
+                          // int? parsedValue = int.tryParse(value);
+                          // if (parsedValue == null || parsedValue <= 0 || parsedValue > 26) {
+                          //   return 'Rows should be between 1 and 26';
+                          // }
                           return null;
                         },
                         onSaved: (value) {

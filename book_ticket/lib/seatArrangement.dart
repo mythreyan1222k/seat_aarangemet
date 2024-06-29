@@ -9,21 +9,21 @@ import 'GetterSetters.dart';
 
 
 class ZoomableList extends StatefulWidget {
-  
+
   List<Seat>? occupiedSeat;
 
-  ZoomableList({this.occupiedSeat});
+  ZoomableList({this.occupiedSeat,});
 
   @override
   _ZoomableListState createState() => _ZoomableListState();
 }
 
 class _ZoomableListState extends State<ZoomableList> {
-  final List<String> alphabet = List.generate(26, (index) => String.fromCharCode('A'.codeUnitAt(0) + index));
+  final List<String> alphabet = generateAlphabets(GetterSetters.instances.setrow);
   List<Seat> ticketStatus = [];
   List<Seat> selectedSeats = [];
   int row = 0;
-  int clm = 30;
+  int clm = 0;
   int totalSeat = 0;
   int seatCount=0;
 
@@ -72,6 +72,7 @@ class _ZoomableListState extends State<ZoomableList> {
                     return Padding(
                       padding: EdgeInsets.only(top: row / 2 == index ? 20 : 0),
                       child: Row(
+
                         children: List.generate(clm, (index2) {
                           int i = ticketStatus.indexWhere((w) => w.seatID == '${alphabet[index]} ${index2 + 1}');
                           SeatState state = ticketStatus[i].state!;
@@ -104,7 +105,7 @@ class _ZoomableListState extends State<ZoomableList> {
                                       else{
                                         Fluttertoast.showToast(
                                             gravity: ToastGravity.CENTER,
-                                            msg: "All ${seatCount} is selected");
+                                            msg: "All ${seatCount} seat is selected");
                                       }
                                     }
                                     else if (state == SeatState.selected && id == '${alphabet[index]} ${index2 + 1}') {
@@ -188,4 +189,24 @@ enum SeatState{
   selected,
   occupied,
   available
+}
+
+List<String> generateAlphabets(int n) {
+  List<String> result = [];
+  int charCodeA = 'a'.codeUnitAt(0);
+  int num = 1;
+
+  for (int i = 0; i < n; i++) {
+    int index = i % 26; // to cycle through 'a' to 'z'
+    String charToAdd = String.fromCharCode(charCodeA + index);
+
+    if (i >= 26) {
+      charToAdd += num.toString();
+      num++;
+    }
+
+    result.add(charToAdd);
+  }
+
+  return result;
 }

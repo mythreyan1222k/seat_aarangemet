@@ -3,6 +3,7 @@ import 'package:book_ticket/selectNumberOfSeat.dart';
 import 'package:book_ticket/utils.dart';
 import 'package:book_ticket/seatArrangement.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 import 'GetterSetters.dart';
 import 'InputScreen.dart';
@@ -37,7 +38,7 @@ class _MarkSelectedSeatsState extends State<MarkSelectedSeats> {
           ),
         ),
       ),
-      body: ZoomableList(occupiedSeat: GetterSetters.instances.occupiedSeat),
+      body: ZoomableList(occupiedSeat: GetterSetters.instances.occupiedSeat,),
       bottomSheet: Container(
         height: 100,
         width: size.width,
@@ -65,7 +66,12 @@ class _MarkSelectedSeatsState extends State<MarkSelectedSeats> {
                   if(e.state==SeatState.selected){selectedSeats.add(e);}
                 });
                 GetterSetters.instances.selectedSeat=selectedSeats;
-                Navigator.push(context, MaterialPageRoute(builder: (context)=>ConfirmationScreen()));
+                if(selectedSeats.length==GetterSetters.instances.setseatcount){
+                  Navigator.push(context, MaterialPageRoute(builder: (context)=>ConfirmationScreen()));
+                }else{
+                  Fluttertoast.showToast(msg: "Please select the seats.");
+                }
+
               }),
             ),
           ],
@@ -73,4 +79,5 @@ class _MarkSelectedSeatsState extends State<MarkSelectedSeats> {
       ),
     );
   }
+
 }
