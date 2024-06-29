@@ -4,6 +4,7 @@ import 'package:book_ticket/selectNumberOfSeat.dart';
 import 'package:book_ticket/utils.dart';
 import 'package:book_ticket/seatArrangement.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class MarkOccupiedSeats extends StatefulWidget {
   const MarkOccupiedSeats({super.key});
@@ -47,7 +48,12 @@ class _MarkOccupiedSeatsState extends State<MarkOccupiedSeats> {
             if(e.state==SeatState.occupied){occupiedSeats.add(e);}
           });
           GetterSetters.instances.occupiedSeat=occupiedSeats;
-          Navigator.push(context, MaterialPageRoute(builder: (context)=>selectNumberOfSeat()));
+          if(occupiedSeats.isNotEmpty){
+            Navigator.push(context, MaterialPageRoute(builder: (context)=>selectNumberOfSeat()));
+          }else{
+            Fluttertoast.showToast(gravity: ToastGravity.CENTER,msg: "Please Select Occupied Seats");
+          }
+
         }),
       ),
     );
