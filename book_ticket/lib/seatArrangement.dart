@@ -37,7 +37,7 @@ class _ZoomableListState extends State<ZoomableList> {
 
     for (int i = 0; i < row; i++) {
       for (int j = 0; j < clm; j++) {
-        ticketStatus.add(Seat(state: SeatState.available, seatID: '${alphabet[i]} ${j + 1}'));
+        ticketStatus.add(Seat(state: SeatState.available, seatID: '${alphabet[i]} ${j + 1}',));
       }
     }
     if(widget.occupiedSeat!=null){
@@ -72,7 +72,6 @@ class _ZoomableListState extends State<ZoomableList> {
                     return Padding(
                       padding: EdgeInsets.only(top: row / 2 == index ? 20 : 0),
                       child: Row(
-
                         children: List.generate(clm, (index2) {
                           int i = ticketStatus.indexWhere((w) => w.seatID == '${alphabet[index]} ${index2 + 1}');
                           SeatState state = ticketStatus[i].state!;
@@ -89,9 +88,16 @@ class _ZoomableListState extends State<ZoomableList> {
                                       if(selectedSeats.length<seatCount){
 
                                         for(int a=0;a<seatCount&&selectedSeats.length<seatCount;a++){
+
                                           try{
                                             if(ticketStatus[i+a].state==SeatState.available){
-                                              ticketStatus[i+a] = Seat(state: SeatState.selected, seatID: '${alphabet[index]} ${(index2+a) + 1}');
+                                              ticketStatus[i+a] = Seat(state: SeatState.selected, seatID: ticketStatus[i+a].seatID);
+                                              selectedSeats.add(ticketStatus[i+a]);
+                                            }else{
+                                              while(ticketStatus[i+a].state==SeatState.occupied){
+                                                i++;
+                                              }
+                                              ticketStatus[i+a] = Seat(state: SeatState.selected, seatID: ticketStatus[i+a].seatID);
                                               selectedSeats.add(ticketStatus[i+a]);
                                             }
                                           }

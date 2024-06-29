@@ -234,3 +234,101 @@ class SeatNumber {
 
 
 }
+
+
+
+
+class MyApp3 extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Flutter CardView Grid Demo',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
+      home: MyHomePage(),
+    );
+  }
+}
+
+class MyHomePage extends StatefulWidget {
+  @override
+  _MyHomePageState createState() => _MyHomePageState();
+}
+
+class _MyHomePageState extends State<MyHomePage> {
+  final List<String> selectedCards = [];
+
+  void _onCardTapped(String cardId) {
+    setState(() {
+      // Check if card is already selected
+      if (selectedCards.contains(cardId)) {
+        selectedCards.remove(cardId);
+      } else {
+        // Calculate the row and column of the tapped card
+        List<String> newSelections = [];
+        int row = int.parse(cardId.split(' x ')[0]);
+        int col = int.parse(cardId.split(' x ')[1]);
+
+        // Select up to 5 cards starting from the tapped card
+        for (int i = 0; i < 5; i++) {
+          int newRow = row + (col + i) ~/ 20;
+          int newCol = (col + i) % 20;
+          String newCardId = '$newRow x $newCol';
+
+          if (!selectedCards.contains(newCardId) && newSelections.length < 5) {
+            newSelections.add(newCardId);
+          }
+        }
+
+        // Add new selections to the selectedCards list
+        for (String newCard in newSelections) {
+          if (selectedCards.length < 5) {
+            selectedCards.add(newCard);
+          }
+        }
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('10x20 Selectable CardView Grid Example'),
+      ),
+      body: SingleChildScrollView(
+        child: Column(
+          children: List.generate(10, (rowIndex) {
+            return Row(
+              children: List.generate(20, (colIndex) {
+                String cardId = '$rowIndex x $colIndex';
+                bool isSelected = selectedCards.contains(cardId);
+                return Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.all(2.0),
+                    child: GestureDetector(
+                      onTap: () => _onCardTapped(cardId),
+                      child: Card(
+                        color: isSelected ? Colors.green : Colors.blueAccent,
+                        child: Container(
+                          height: 50,
+                          child: Center(
+                            child: Text(
+                              'Card $cardId',
+                              style: TextStyle(color: Colors.white, fontSize: 12),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                );
+              }),
+            );
+          }),
+        ),
+      ),
+    );
+  }
+}
